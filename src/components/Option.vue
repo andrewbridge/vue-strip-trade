@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapActions } from 'vuex';
 import OptionClass from './OptionClass.vue';
 
 const getAndEmit = (fieldName) => {
@@ -46,7 +46,7 @@ const getAndEmit = (fieldName) => {
     },
     set(newValue) {
       const { tradeId, optionId } = this;
-      this.editOption({ tradeId, optionId, changes: { [fieldName]: newValue } });
+      this.updateOption({ tradeId, optionId, changes: { [fieldName]: newValue } });
     }
   }
 };
@@ -70,7 +70,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(['editOption']),
+    ...mapActions(['updateOption']),
     stripDetails() {
       const { tradeId, optionId } = this;
       this.$store.dispatch('createStripOption', { tradeId, baseOptionId: optionId });

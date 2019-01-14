@@ -41,5 +41,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+    .options-panel {
+        display: flex;
+    }
 </style>

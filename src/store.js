@@ -5,10 +5,28 @@ import moment from 'moment';
 
 Vue.use(Vuex);
 
+const dateFormat = 'YYYY-MM-DD';
 const getTradeObject = state => id => state.trades.find(trade => trade.id === id);
 const getTradeIndex = state => id => state.trades.findIndex(trade => trade.id === id);
 const getTotalsReducer = (totals, option) => {
   return { low: totals.low + option.low, high: totals.high + option.high };
+};
+
+const generateLegs = (baseOption) => {
+  const beginDate = moment(baseOption.beginDate);
+  const legs = [];
+  for (let i = 0; i < baseOption.expiries; i += 1) {
+    legs.push({
+      optionClass: baseOption.optionClass,
+      type: baseOption.type === 'put' ? 'call' : 'put',
+      beginDate: beginDate.format(dateFormat),
+      endDate: beginDate.clone().add(1, 'month').subtract(1, 'day').format(dateFormat),
+      notionalInAmount: baseOption.notionalInAmount,
+      notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell',
+    });
+    beginDate.add(1, 'month');
+  }
+  return legs;
 };
 
 export default new Vuex.Store({
@@ -72,14 +90,6 @@ export default new Vuex.Store({
 
       Vue.set(trade.options, optionId, { ...option, ...changes });
     },
-    toggleOptionType(state, { tradeId, optionId }) {
-      const option = getTradeObject(state)(tradeId).options[optionId];
-      option.type = option.type === 'put' ? 'call' : 'put';
-    },
-    toggleOptionNotionalType(state, { tradeId, optionId }) {
-      const option = getTradeObject(state)(tradeId).options[optionId];
-      option.notionalInType = option.notionalInType === 'sell' ? 'buy' : 'sell';
-    },
   },
   actions: {
     // actions for the above mutations?
@@ -126,21 +136,8 @@ export default new Vuex.Store({
         return baseOption.stripOptionId;
       }
 
-      const beginDate = moment(baseOption.beginDate);
-      const dateFormat = 'YYYY-MM-DD';
       const optionId = baseOptionId + 1;
-      let legs = [];
-      for (let i = 0; i < baseOption.expiries; i++) {
-        legs.push({
-          optionClass: baseOption.optionClass,
-          type: baseOption.type === 'put' ? 'call' : 'put',
-          beginDate: beginDate.format(dateFormat),
-          endDate: beginDate.clone().add(1, 'month').subtract(1, 'day').format(dateFormat),
-          notionalInAmount: baseOption.notionalInAmount,
-          notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell',
-        });
-        beginDate.add(1, 'month');
-      }
+      const legs = generateLegs(baseOption);
 
       // Add strip option next to base
       commit('addOption', {
@@ -163,12 +160,46 @@ export default new Vuex.Store({
       });
 
       return optionId;
-      // Create logic to adhere to strip rules (loop)
-      // Add ids between base and strip trades?
-      // Cater for base trades that already have that relationship?
     },
-    updateTrade() {
+    updateOption({ state, commit }, { tradeId, optionId, changes }) {
       // Can we update everything in the strip when we update the base?
+      const trade = getTradeObject(state)(tradeId);
+      let option = trade.options[optionId];
+
+      commit('editOption', {
+        tradeId,
+        optionId,
+        changes,
+      });
+
+      option = trade.options[optionId];
+
+      if ('stripOptionId' in option) {
+        commit('editOption', {
+          tradeId,
+          optionId: option.stripOptionId,
+          changes: {
+            legs: generateLegs(option),
+          },
+        });
+      }
+    },
+    toggleOptionValue({ state, dispatch }, { tradeId, optionId, value }) {
+      const trade = getTradeObject(state)(tradeId);
+      const option = trade.options[optionId];
+      const changes = {};
+      switch (value) {
+        case 'type':
+          changes[value] = option[value] === 'put' ? 'call' : 'put';
+          break;
+        case 'notionalInType':
+          changes[value] = option[value] === 'sell' ? 'buy' : 'sell';
+          break;
+        default:
+          //
+      }
+
+      return dispatch('updateOption', { tradeId, optionId, changes });
     },
   },
 });
