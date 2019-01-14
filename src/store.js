@@ -51,7 +51,10 @@ export default new Vuex.Store({
       trade.options.splice(optionId, 0, option);
     },
     editOption(state, { tradeId, optionId, changes }) {
+      const trade = getTradeObject(state)(tradeId);
+      const option = trade.options[optionId];
 
+      Vue.set(trade.options, optionId, {...option, changes});
     }
   },
   actions: {
