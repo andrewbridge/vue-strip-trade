@@ -45,13 +45,41 @@ export default new Vuex.Store({
 
       Vue.set(state.trades, index, {...trade, changes});
     },
+    addOption(state, { tradeId, optionId, option }) {
+      const trade = getTradeObject(state)(tradeId);
+
+      trade.options.splice(optionId, 0, option);
+    },
   },
   actions: {
     // actions for the above mutations?
-    createTrade(context) {
+    createTrade({ commit }) {
       const id = uniqueId('trade-'); // Dummy only, this is dicey
+      commit('addTrade', { id, options: [] });
+      return id;
+    },
+    createOption({ state, commit }, { id }) {
+      const trade = getTradeObject(state)(id);
       const now = moment();
-      context.commit('addTrade', {
+      commit('addOption', {
+        tradeId: id,
+        optionId: trade.options.length,
+        option: {
+          id,
+          optionClass: 'vanilla',
+          type: 'buy',
+          strike: 0,
+          beginDate: now.format('YYYY-MM-DD'),
+          endDate: now.add(1, 'month').format('YYYY-MM-DD'),
+          expiries: 0,
+          notionalInAmount: 0,
+          notionalInType: 'sell',
+        }
+      });
+
+      /* This is a rough option, not a trade
+      const now = moment();
+      {
         id,
         optionClass: 'vanilla',
         type: 'buy',
@@ -61,10 +89,10 @@ export default new Vuex.Store({
         expiries: 0,
         notionalInAmount: 0,
         notionalInType: 'sell',
-      });
-      return id;
+      }
+       */
     },
-    createStripTrade() {
+    createStripOption() {
       // Create logic to adhere to strip rules (loop)
       // Add ids between base and strip trades?
       // Cater for base trades that already have that relationship?
