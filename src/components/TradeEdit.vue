@@ -16,7 +16,7 @@
 export default {
   name: 'TradeEdit',
   props: {
-    id: Number,
+    id: String,
   },
 };
 </script>

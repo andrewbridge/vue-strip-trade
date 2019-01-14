@@ -1,17 +1,27 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Editing {{tradeId}}</h1>
+    <TradeEdit :id="tradeId" v-if="tradeId"></TradeEdit>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import { mapActions } from 'vuex';
+import TradeEdit from './components/TradeEdit.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
+    TradeEdit,
+  },
+  data() {
+    return {
+      tradeId: '',
+    };
+  },
+  methods: mapActions(['createTrade']),
+  async created() {
+    this.tradeId = await this.createTrade();
   },
 };
 </script>
