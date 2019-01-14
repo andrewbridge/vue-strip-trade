@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <h1>Editing {{tradeId}}</h1>
     <TradeEdit :id="tradeId" v-if="tradeId"></TradeEdit>
   </div>
 </template>

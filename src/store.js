@@ -9,7 +9,7 @@ const dateFormat = 'YYYY-MM-DD';
 const getTradeObject = state => id => state.trades.find(trade => trade.id === id);
 const getTradeIndex = state => id => state.trades.findIndex(trade => trade.id === id);
 const getTotalsReducer = (totals, option) => {
-  return { low: totals.low + option.low, high: totals.high + option.high };
+  return { low: totals.low + option.lowValue, high: totals.high + option.highValue };
 };
 
 const generateLegs = (baseOption) => {
@@ -55,18 +55,9 @@ export default new Vuex.Store({
   },
   getters: {
     getTrade: getTradeObject,
-    /*getTradeTotals: state => (id) => {
+    getTradeTotals: state => (id) => {
       const trade = getTradeObject(state)(id);
-      return trade.options.reduce((totals, option) => {
-        if (option.type === 'strip') {
-          return option.legs.reduce(getTotalsReducer, totals);
-        }
-        return getTotalsReducer(totals, option);
-      }, { low: 0, high: 0 });
-    },*/
-    getStripTotals: state => (tradeId, stripOptionId) => {
-      const trade = getTradeObject(state)(tradeId);
-      return trade.options[stripOptionId].legs.reduce(getTotalsReducer, { low: 0, high: 0 });
+      return trade.options.reduce(getTotalsReducer, { low: 0, high: 0 });
     },
   },
   mutations: {
@@ -147,6 +138,7 @@ export default new Vuex.Store({
 
       const optionId = baseOptionId + 1;
       const legs = generateLegs(baseOption);
+      const totals = legs.reduce(getTotalsReducer, { low: 0, high: 0 });
 
       // Add strip option next to base
       commit('addOption', {
@@ -156,6 +148,8 @@ export default new Vuex.Store({
           baseOptionId,
           type: 'strip',
           legs,
+          lowValue: totals.low,
+          highValue: totals.high,
         },
       });
 
@@ -183,12 +177,17 @@ export default new Vuex.Store({
 
       option = trade.options[optionId];
 
+      const legs = generateLegs(option);
+      const totals = legs.reduce(getTotalsReducer, { low: 0, high: 0 });
+
       if ('stripOptionId' in option) {
         commit('editOption', {
           tradeId,
           optionId: option.stripOptionId,
           changes: {
-            legs: generateLegs(option),
+            legs,
+            lowValue: totals.low,
+            highValue: totals.high,
           },
         });
       }

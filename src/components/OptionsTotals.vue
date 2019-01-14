@@ -1,11 +1,11 @@
 <template>
     <div class="options-totals">
-        <div class="final-total">
-
+        <div>
+            <div class="final-total">{{finalTotal}}</div>
         </div>
-        <div v-for="(option, optionIndex) in trade.options">
-            <div v-if="option.type !== 'strip'" class="total">Option total</div>
-            <div v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'" class="leg-total">Leg total</div>
+        <div v-for="option in trade.options">
+            <div v-if="option.type !== 'strip'" class="total">{{option.lowValue}}/{{option.highValue}}</div>
+            <div v-for="leg in option.legs" v-if="option.type === 'strip'" class="leg-total">{{leg.lowValue}}/{{leg.highValue}}</div>
         </div>
     </div>
 </template>
@@ -20,6 +20,10 @@ export default {
     trade() {
       return this.$store.getters.getTrade(this.id);
     },
+    finalTotal() {
+      const totals = this.$store.getters.getTradeTotals(this.id);
+      return `${totals.low}/${totals.high}`;
+    },
   },
   methods: {
     createOption() {
@@ -32,11 +36,18 @@ export default {
 <style scoped lang="scss">
     .options-totals {
         display: flex;
-        //margin-top: 1.5rem;
+        margin-top: 1.5rem;
     }
 
     .total {
         width: 300px;
+        background: #3776f1;
+        color: white;
+    }
+
+    .final-total, .leg-total {
+        background: #091f7e;
+        color: white;
     }
 
     .leg-total {

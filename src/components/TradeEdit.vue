@@ -1,8 +1,12 @@
 <template>
     <div>
-        <TradeInformation :id="id"></TradeInformation>
-        <OptionsPanel :id="id"></OptionsPanel>
-        <OptionsTotals :id="id"></OptionsTotals>
+        <header>
+            <TradeInformation :id="id"></TradeInformation>
+        </header>
+        <main>
+            <OptionsPanel :id="id"></OptionsPanel>
+            <OptionsTotals :id="id"></OptionsTotals>
+        </main>
     </div>
 </template>
 
@@ -25,5 +29,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+    header {
+        position: fixed;
+        width: 100%;
+    }
 
+    main {
+        padding-top: 25vh;
+    }
 </style>

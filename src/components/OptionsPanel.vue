@@ -58,7 +58,7 @@ export default {
         min-width: 100%;
     }
 
-    .labels {
+    .labels > * {
         width: 160px;
     }
 
