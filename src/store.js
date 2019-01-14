@@ -39,8 +39,9 @@ export default new Vuex.Store({
     editTrade(state, {id, changes}) { // edit by path? merge?
       // Get the trade and merge in changes
       const index = getTradeIndex(state)(id);
+      const trade = state.trades[index];
 
-      Vue.set(state.trades, index, changes);
+      Vue.set(state.trades, index, {...trade, changes});
     },
   },
   actions: {
