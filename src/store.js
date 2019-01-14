@@ -43,7 +43,7 @@ export default new Vuex.Store({
       const index = getTradeIndex(state)(id);
       const trade = state.trades[index];
 
-      Vue.set(state.trades, index, {...trade, changes});
+      Vue.set(state.trades, index, {...trade, ...changes});
     },
     addOption(state, { tradeId, optionId, option }) {
       const trade = getTradeObject(state)(tradeId);
@@ -54,7 +54,7 @@ export default new Vuex.Store({
       const trade = getTradeObject(state)(tradeId);
       const option = trade.options[optionId];
 
-      Vue.set(trade.options, optionId, {...option, changes});
+      Vue.set(trade.options, optionId, { ...option, ...changes });
     }
   },
   actions: {
@@ -98,7 +98,7 @@ export default new Vuex.Store({
           beginDate: beginDate.format(dateFormat),
           endDate: beginDate.clone().add(1, 'month').subtract(1, 'day').format(dateFormat),
           notionalInAmount: baseOption.notionalInAmount,
-          notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell'
+          notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell',
         });
         beginDate.add(1, 'month');
       }
@@ -122,6 +122,8 @@ export default new Vuex.Store({
           stripOptionId: optionId,
         },
       });
+
+      return optionId;
       // Create logic to adhere to strip rules (loop)
       // Add ids between base and strip trades?
       // Cater for base trades that already have that relationship?
