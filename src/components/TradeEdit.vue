@@ -11,12 +11,12 @@
 </template>
 
 <script>
-import TradeInformation from './TradeInformation';
+import TradeInformation from './TradeInformation.vue';
 
 export default {
   name: 'TradeEdit',
   components: {
-    TradeInformation
+    TradeInformation,
   },
   props: {
     id: String,
