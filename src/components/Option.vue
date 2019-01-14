@@ -21,7 +21,7 @@
             <input type="number" id="expiries" v-model="expiries">
         </div>
         <div class="empty"></div>
-        <button v-on:click="$emit('strip-details', true)">Strip details</button>
+        <button v-on:click="stripDetails">Strip details</button>
         <div>
             <span>Leg total notional:</span>
         </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations } from 'vuex';
 import OptionClass from './OptionClass.vue';
 
 const getAndEmit = (fieldName) => {
@@ -62,16 +62,19 @@ export default {
   },
   computed: {
     ...['optionClass', 'type', 'strike', 'beginDate', 'endDate', 'expiries', 'notionalInAmount', 'notionalInType'].reduce((funcs, prop) => Object.assign(funcs, {[prop]: getAndEmit(prop)}), {}),
-    ...mapMutations(['editOption']),
     trade() {
       return this.$store.getters.getTrade(this.tradeId);
     },
     option() {
-      console.log(this.trade);
       return this.trade.options[this.optionId];
     },
   },
   methods: {
+    ...mapMutations(['editOption']),
+    stripDetails() {
+      const { tradeId, optionId } = this;
+      this.$store.dispatch('createStripOption', { tradeId, baseOptionId: optionId });
+    },
     toggleOptionType() {
       const { tradeId, optionId } = this;
       this.$store.commit('toggleOptionType', { tradeId, optionId });

@@ -33,7 +33,7 @@ export default {
   methods: {
     createOption() {
       this.$store.dispatch('createOption', { id: this.id });
-    }
+    },
   },
 };
 </script>
