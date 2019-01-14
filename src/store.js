@@ -3,6 +3,9 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+const getTradeObject = state => id => state.trades.find(trade => trade.id === id);
+const getTradeIndex = state => id => state.trades.findIndex(trade => trade.id === id);
+
 export default new Vuex.Store({
   state: {
     trades: [],
@@ -20,18 +23,28 @@ export default new Vuex.Store({
       'Accumulator template',
     ],
   },
+  getters: {
+    getTrade: getTradeObject,
+  },
   mutations: {
     addTrade(state, trade) {
-      // push to trades
+      state.trades.push(trade);
     },
-    addStripTrade(state, payload) {
+    addStripTrade(state, { baseTrade, stripTrade }) {
       // add trade after base trade
+      const baseIndex = getTradeIndex(state)(baseTrade.id);
+
+      state.trades.splice(baseIndex + 1, 0, stripTrade);
     },
-    editTrade(state, payload) { // edit by path? merge?
+    editTrade(state, {id, changes}) { // edit by path? merge?
       // Get the trade and merge in changes
+      const index = getTradeIndex(state)(id);
+
+      Vue.set(state.trades, index, changes);
     },
   },
   actions: {
     // actions for the above mutations?
+
   },
 });
