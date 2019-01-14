@@ -4,8 +4,8 @@
             <OptionClass v-model="optionClass"></OptionClass>
         </div>
         <div class="button field">
-            <span>{{trade.fromCurrency}} {{type}}</span>
-            <button v-on:click="this.toggleOptionType">🔁</button>
+            <span data-cy="optionType">{{trade.fromCurrency}} {{type}}</span>
+            <button v-on:click="this.toggleOptionType" data-cy="optionTypeToggle">🔁</button>
         </div>
         <div class="full field">
             <input type="number" v-model="strike">
@@ -22,11 +22,11 @@
         </div>
         <div class="field">
             <label for="expiries">Expiries:</label>
-            <input type="number" id="expiries" v-model="expiries">
+            <input type="number" id="expiries" min="0" v-model="expiries" data-cy="optionExpiries">
         </div>
         <div class="empty"></div>
         <div>
-            <button v-on:click="stripDetails">Strip details</button>
+            <button v-on:click="stripDetails" data-cy="optionSplitDetails">Strip details</button>
         </div>
         <div>
             <span>Leg total notional:</span>
@@ -36,7 +36,9 @@
         </div>
         <div class="button field">
             <input type="number" v-model="notionalInAmount">
-            <button v-on:click="this.toggleOptionNotionalType">{{notionalInType}} 🔁</button>
+            <button
+                    v-on:click="this.toggleOptionNotionalType"
+                    data-cy="optionNotionalTypeToggle">{{notionalInType}} 🔁</button>
         </div>
     </div>
 </template>
@@ -45,17 +47,15 @@
 import { mapActions } from 'vuex';
 import OptionClass from './OptionClass.vue';
 
-const getAndEmit = (fieldName) => {
-  return {
-    get() {
-      return this.option ? this.option[fieldName] : '';
-    },
-    set(newValue) {
-      const { tradeId, optionId } = this;
-      this.updateOption({ tradeId, optionId, changes: { [fieldName]: newValue } });
-    },
-  };
-};
+const getAndEmit = fieldName => ({
+  get() {
+    return this.option ? this.option[fieldName] : '';
+  },
+  set(newValue) {
+    const { tradeId, optionId } = this;
+    this.updateOption({ tradeId, optionId, changes: { [fieldName]: newValue } });
+  },
+});
 
 export default {
   name: 'Option',
@@ -67,7 +67,7 @@ export default {
     optionId: Number,
   },
   computed: {
-    ...['optionClass', 'type', 'strike', 'beginDate', 'endDate', 'expiries', 'notionalInAmount', 'notionalInType'].reduce((funcs, prop) => Object.assign(funcs, {[prop]: getAndEmit(prop)}), {}),
+    ...['optionClass', 'type', 'strike', 'beginDate', 'endDate', 'expiries', 'notionalInAmount', 'notionalInType'].reduce((funcs, prop) => Object.assign(funcs, { [prop]: getAndEmit(prop) }), {}),
     trade() {
       return this.$store.getters.getTrade(this.tradeId);
     },

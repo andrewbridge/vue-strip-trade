@@ -5,12 +5,11 @@ export default {
   addTrade(state, trade) {
     state.trades.push(trade);
   },
-  editTrade(state, {id, changes}) { // edit by path? merge?
-    // Get the trade and merge in changes
+  editTrade(state, { id, changes }) {
     const index = getTradeIndex(state)(id);
     const trade = state.trades[index];
 
-    Vue.set(state.trades, index, {...trade, ...changes});
+    Vue.set(state.trades, index, { ...trade, ...changes });
   },
   addOption(state, { tradeId, optionId, option }) {
     const trade = getTradeObject(state)(tradeId);

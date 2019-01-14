@@ -27,7 +27,9 @@
             <input type="number" id="spot" v-model="spotPrice">
         </div>
         <span class="field">Contains:</span>
-        <span class="field">{{trade.options.length}} option{{ trade.options.length !== 1 ? 's' : ''}}</span>
+        <span class="field">
+            {{trade.options.length}} option{{ trade.options.length !== 1 ? 's' : ''}}
+        </span>
     </div>
 </template>
 
@@ -35,16 +37,14 @@
 import { mapMutations, mapState } from 'vuex';
 import Currency from './Currency.vue';
 
-const getAndEmit = (fieldName) => {
-  return {
-    get() {
-      return this.trade[fieldName];
-    },
-    set(newValue) {
-      this.editTrade({ id: this.id, changes: { [fieldName]: newValue } });
-    },
-  };
-};
+const getAndEmit = fieldName => ({
+  get() {
+    return this.trade[fieldName];
+  },
+  set(newValue) {
+    this.editTrade({ id: this.id, changes: { [fieldName]: newValue } });
+  },
+});
 
 export default {
   name: 'TradeInformation',

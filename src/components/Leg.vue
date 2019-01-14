@@ -1,9 +1,9 @@
 <template>
-    <div class="field-container">
+    <div class="field-container" data-cy="optionLeg">
         <div>
             {{optionClass}}
         </div>
-        <div>
+        <div data-cy="legType">
             {{trade.fromCurrency}} {{type}}
         </div>
         <div>
@@ -22,14 +22,14 @@
         <div class="empty"></div>
         <div class="empty"></div>
         <div class="empty"></div>
-        <div>
+        <div data-cy="legNotionalType">
             {{notionalInAmount}} {{notionalInType}}
         </div>
     </div>
 </template>
 
 <script>
-const genericGetter = fieldName => function () { return this.leg[fieldName]; };
+const genericGetter = fieldName => function getter() { return this.leg[fieldName]; };
 
 export default {
   name: 'Leg',
@@ -39,7 +39,7 @@ export default {
     legId: Number,
   },
   computed: {
-    ...['optionClass', 'type', 'strike', 'beginDate', 'endDate', 'expiries', 'notionalInAmount', 'notionalInType'].reduce((funcs, prop) => Object.assign(funcs, {[prop]: genericGetter(prop)}), {}),
+    ...['optionClass', 'type', 'strike', 'beginDate', 'endDate', 'expiries', 'notionalInAmount', 'notionalInType'].reduce((funcs, prop) => Object.assign(funcs, { [prop]: genericGetter(prop) }), {}),
     trade() {
       return this.$store.getters.getTrade(this.tradeId);
     },

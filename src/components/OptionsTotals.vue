@@ -3,9 +3,15 @@
         <div>
             <div class="final-total">{{finalTotal}}</div>
         </div>
-        <div v-for="option in trade.options">
-            <div v-if="option.type !== 'strip'" class="total">{{option.lowValue}}/{{option.highValue}}</div>
-            <div v-for="leg in option.legs" v-if="option.type === 'strip'" class="leg-total">{{leg.lowValue}}/{{leg.highValue}}</div>
+        <div v-for="(option, optionIndex) in trade.options" v-bind:key="optionIndex">
+            <div
+                    v-if="option.type !== 'strip'"
+                    class="total">{{option.lowValue}}/{{option.highValue}}</div>
+            <div
+                    v-for="(leg, legIndex) in option.legs"
+                    v-bind:key="legIndex"
+                    v-if="option.type === 'strip'"
+                    class="leg-total">{{leg.lowValue}}/{{leg.highValue}}</div>
         </div>
     </div>
 </template>
@@ -37,6 +43,10 @@ export default {
     .options-totals {
         display: flex;
         margin-top: 1.5rem;
+
+        & > * {
+            white-space: nowrap;
+        }
     }
 
     .total {

@@ -15,12 +15,18 @@
             <span>25d Bfly (%)</span>
             <span>Notional in</span>
         </div>
-        <div class="option" v-for="(option, optionIndex) in trade.options">
+        <div class="option" v-for="(option, optionIndex) in trade.options" v-bind:key="optionIndex">
             <Option :tradeId="id" :optionId="optionIndex" v-if="option.type !== 'strip'"></Option>
-            <Leg :tradeId="id" :optionId="optionIndex" :legId="legIndex" v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'"></Leg>
+            <Leg
+                    :tradeId="id"
+                    :optionId="optionIndex"
+                    :legId="legIndex"
+                    v-for="(leg, legIndex) in option.legs"
+                    v-bind:key="legIndex"
+                    v-if="option.type === 'strip'"></Leg>
         </div>
         <div class="option">
-            <button v-on:click="createOption" class="add-prompt">+</button>
+            <button v-on:click="createOption" class="add-prompt" data-cy="addOption">+</button>
         </div>
     </div>
 </template>
@@ -39,7 +45,6 @@ export default {
     id: String,
   },
   computed: {
-    // ...['tradeDate', 'spotDate', 'dataSnap', 'fromCurrency', 'toCurrency', 'spotPrice'].reduce((funcs, prop) => Object.assign(funcs, { [prop]: getAndEmit(prop) }), {}),
     trade() {
       return this.$store.getters.getTrade(this.id);
     },

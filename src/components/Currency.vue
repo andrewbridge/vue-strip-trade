@@ -1,6 +1,9 @@
 <template>
     <select v-bind:value="value" v-on:change="$emit('input', $event.target.value)">
-        <option v-for="currency in currencies" :value="currency">{{currency}}</option>
+        <option
+                v-for="(currency, index) in currencies"
+                v-bind:key="index"
+                :value="currency">{{currency}}</option>
     </select>
 </template>
 
