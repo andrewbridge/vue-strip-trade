@@ -55,7 +55,15 @@ export default new Vuex.Store({
       const option = trade.options[optionId];
 
       Vue.set(trade.options, optionId, { ...option, ...changes });
-    }
+    },
+    toggleOptionType(state, { tradeId, optionId }) {
+      const option = getTradeObject(state)(tradeId).options[optionId];
+      option.type = option.type === 'put' ? 'call' : 'put';
+    },
+    toggleOptionNotionalType(state, { tradeId, optionId }) {
+      const option = getTradeObject(state)(tradeId).options[optionId];
+      option.notionalInType = option.notionalInType === 'sell' ? 'buy' : 'sell';
+    },
   },
   actions: {
     // actions for the above mutations?
@@ -82,8 +90,8 @@ export default new Vuex.Store({
         tradeId: id,
         optionId,
         option: {
-          optionClass: 'vanilla',
-          type: 'buy',
+          optionClass: 'Vanilla',
+          type: 'call',
           strike: 0,
           beginDate: now.format('YYYY-MM-DD'),
           endDate: now.add(1, 'month').format('YYYY-MM-DD'),

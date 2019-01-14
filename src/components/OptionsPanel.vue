@@ -7,23 +7,14 @@
             <Option :tradeId="id" :optionId="index" v-if="option.type !== 'strip'"></Option>
             <!-- If it is a strip loop through each leg -->
         </div>
+        <div class="option">
+            <button v-on:click="createOption">+</button>
+        </div>
     </div>
 </template>
 
 <script>
 import Option from './Option.vue';
-/*import { mapMutations } from 'vuex';
-
-const getAndEmit = (fieldName) => {
-  return {
-    get() {
-      return this.trade[fieldName];
-    },
-    set(newValue) {
-      this.editTrade({ id: this.id, changes: { [fieldName]: newValue } });
-    },
-  };
-};*/
 
 export default {
   name: 'OptionsPanel',
@@ -39,7 +30,11 @@ export default {
       return this.$store.getters.getTrade(this.id);
     },
   },
-  methods: mapMutations(['editTrade']),
+  methods: {
+    createOption() {
+      this.$store.dispatch('createOption', { id: this.id });
+    }
+  },
 };
 </script>
 

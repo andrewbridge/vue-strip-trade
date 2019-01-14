@@ -1,9 +1,7 @@
 <template>
     <div>
         <TradeInformation :id="id"></TradeInformation>
-        <div class="options-panel">
-
-        </div>
+        <OptionsPanel :id="id"></OptionsPanel>
         <div class="trade-totals">
 
         </div>
@@ -12,10 +10,12 @@
 
 <script>
 import TradeInformation from './TradeInformation.vue';
+import OptionsPanel from './OptionsPanel.vue';
 
 export default {
   name: 'TradeEdit',
   components: {
+    OptionsPanel,
     TradeInformation,
   },
   props: {
