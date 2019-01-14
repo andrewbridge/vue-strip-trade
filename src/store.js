@@ -7,6 +7,9 @@ Vue.use(Vuex);
 
 const getTradeObject = state => id => state.trades.find(trade => trade.id === id);
 const getTradeIndex = state => id => state.trades.findIndex(trade => trade.id === id);
+const getTotalsReducer = (totals, option) => {
+  return { low: totals.low + option.low, high: totals.high + option.high };
+};
 
 export default new Vuex.Store({
   state: {
@@ -27,6 +30,19 @@ export default new Vuex.Store({
   },
   getters: {
     getTrade: getTradeObject,
+    /*getTradeTotals: state => (id) => {
+      const trade = getTradeObject(state)(id);
+      return trade.options.reduce((totals, option) => {
+        if (option.type === 'strip') {
+          return option.legs.reduce(getTotalsReducer, totals);
+        }
+        return getTotalsReducer(totals, option);
+      }, { low: 0, high: 0 });
+    },*/
+    getStripTotals: state => (tradeId, stripOptionId) => {
+      const trade = getTradeObject(state)(tradeId);
+      return trade.options[stripOptionId].legs.reduce(getTotalsReducer, { low: 0, high: 0 });
+    },
   },
   mutations: {
     addTrade(state, trade) {
@@ -105,6 +121,11 @@ export default new Vuex.Store({
     createStripOption({ state, commit }, { tradeId, baseOptionId }) {
       const trade = getTradeObject(state)(tradeId);
       const baseOption = trade.options[baseOptionId];
+
+      if ('stripOptionId' in baseOption) {
+        return baseOption.stripOptionId;
+      }
+
       const beginDate = moment(baseOption.beginDate);
       const dateFormat = 'YYYY-MM-DD';
       const optionId = baseOptionId + 1;

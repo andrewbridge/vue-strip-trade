@@ -2,21 +2,21 @@
     <div>
         <TradeInformation :id="id"></TradeInformation>
         <OptionsPanel :id="id"></OptionsPanel>
-        <div class="trade-totals">
-
-        </div>
+        <OptionTotals :id="id"></OptionTotals>
     </div>
 </template>
 
 <script>
 import TradeInformation from './TradeInformation.vue';
 import OptionsPanel from './OptionsPanel.vue';
+import OptionTotals from './OptionTotals.vue';
 
 export default {
   name: 'TradeEdit',
   components: {
     OptionsPanel,
     TradeInformation,
+    OptionTotals
   },
   props: {
     id: String,
