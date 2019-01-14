@@ -3,9 +3,9 @@
         <div class="field-labels">
 
         </div>
-        <div class="option" v-for="(option, index) in trade.options">
-            <Option :tradeId="id" :optionId="index" v-if="option.type !== 'strip'"></Option>
-            <!-- If it is a strip loop through each leg -->
+        <div class="option" v-for="(option, optionIndex) in trade.options">
+            <Option :tradeId="id" :optionId="optionIndex" v-if="option.type !== 'strip'"></Option>
+            <Leg :tradeId="id" :optionId="optionIndex" :legId="legIndex" v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'"></Leg>
         </div>
         <div class="option">
             <button v-on:click="createOption">+</button>
@@ -15,11 +15,13 @@
 
 <script>
 import Option from './Option.vue';
+import Leg from './Leg.vue';
 
 export default {
   name: 'OptionsPanel',
   components: {
     Option,
+    Leg,
   },
   props: {
     id: String,
