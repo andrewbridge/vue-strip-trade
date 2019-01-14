@@ -50,6 +50,9 @@ export default new Vuex.Store({
 
       trade.options.splice(optionId, 0, option);
     },
+    editOption(state, { tradeId, optionId, changes }) {
+
+    }
   },
   actions: {
     // actions for the above mutations?
@@ -61,11 +64,11 @@ export default new Vuex.Store({
     createOption({ state, commit }, { id }) {
       const trade = getTradeObject(state)(id);
       const now = moment();
+      const optionId = trade.options.length;
       commit('addOption', {
         tradeId: id,
-        optionId: trade.options.length,
+        optionId,
         option: {
-          id,
           optionClass: 'vanilla',
           type: 'buy',
           strike: 0,
@@ -74,25 +77,48 @@ export default new Vuex.Store({
           expiries: 0,
           notionalInAmount: 0,
           notionalInType: 'sell',
-        }
+        },
+      });
+      return optionId;
+    },
+    createStripOption({ state, commit }, { tradeId, baseOptionId }) {
+      const trade = getTradeObject(state)(tradeId);
+      const baseOption = trade.options[baseOptionId];
+      const beginDate = moment(baseOption.beginDate);
+      const dateFormat = 'YYYY-MM-DD';
+      const optionId = baseOptionId + 1;
+      let legs = [];
+      for (let i = 0; i < baseOption.expiries; i++) {
+        legs.push({
+          optionClass: baseOption.optionClass,
+          type: baseOption.type === 'put' ? 'call' : 'put',
+          beginDate: beginDate.format(dateFormat),
+          endDate: beginDate.clone().add(1, 'month').subtract(1, 'day').format(dateFormat),
+          notionalInAmount: baseOption.notionalInAmount,
+          notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell'
+        });
+        beginDate.add(1, 'month');
+      }
+
+      // Add strip option next to base
+      commit('addOption', {
+        tradeId,
+        optionId,
+        option: {
+          baseOptionId,
+          type: 'strip',
+          legs,
+        },
       });
 
-      /* This is a rough option, not a trade
-      const now = moment();
-      {
-        id,
-        optionClass: 'vanilla',
-        type: 'buy',
-        strike: 0,
-        beginDate: now.format('YYYY-MM-DD'),
-        endDate: now.add(1, 'month').format('YYYY-MM-DD'),
-        expiries: 0,
-        notionalInAmount: 0,
-        notionalInType: 'sell',
-      }
-       */
-    },
-    createStripOption() {
+      // Update base option with strip option id
+      commit('editOption', {
+        tradeId,
+        optionId: baseOptionId,
+        changes: {
+          stripOptionId: optionId,
+        },
+      });
       // Create logic to adhere to strip rules (loop)
       // Add ids between base and strip trades?
       // Cater for base trades that already have that relationship?
