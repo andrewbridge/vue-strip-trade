@@ -1,8 +1,6 @@
 <template>
     <div>
-        <div class="trade-information">
-
-        </div>
+        <TradeInformation :id="id"></TradeInformation>
         <div class="options-panel">
 
         </div>
@@ -13,8 +11,13 @@
 </template>
 
 <script>
+import TradeInformation from './TradeInformation';
+
 export default {
   name: 'TradeEdit',
+  components: {
+    TradeInformation
+  },
   props: {
     id: String,
   },

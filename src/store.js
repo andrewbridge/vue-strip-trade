@@ -61,7 +61,17 @@ export default new Vuex.Store({
     // actions for the above mutations?
     createTrade({ commit }) {
       const id = uniqueId('trade-'); // Dummy only, this is dicey
-      commit('addTrade', { id, options: [] });
+      const nowTimestamp = moment().format('YYYY-MM-DD');
+      commit('addTrade', {
+        id,
+        tradeDate: nowTimestamp,
+        spotDate: nowTimestamp,
+        dataSnap: 'Live rates',
+        fromCurrency: 'GBP',
+        toCurrency: 'USD',
+        spotPrice: 0,
+        options: [],
+      });
       return id;
     },
     createOption({ state, commit }, { id }) {
