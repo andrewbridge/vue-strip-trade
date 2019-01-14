@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { uniqueId } from 'lodash';
+import { uniqueId, random } from 'lodash';
 import moment from 'moment';
 
 Vue.use(Vuex);
@@ -23,6 +23,8 @@ const generateLegs = (baseOption) => {
       endDate: beginDate.clone().add(1, 'month').subtract(1, 'day').format(dateFormat),
       notionalInAmount: baseOption.notionalInAmount,
       notionalInType: baseOption.notionalInType === 'sell' ? 'buy' : 'sell',
+      lowValue: random(-1000, 500, false),
+      highValue: random(-500, 1000, false),
     });
     beginDate.add(1, 'month');
   }
@@ -129,6 +131,8 @@ export default new Vuex.Store({
           expiries: 0,
           notionalInAmount: 0,
           notionalInType: 'sell',
+          lowValue: random(-1000, 500, false),
+          highValue: random(-500, 1000, false),
         },
       });
       return optionId;

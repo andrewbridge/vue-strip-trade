@@ -65,12 +65,13 @@ export default {
 
 <style scoped lang="scss">
     $fieldHeight: 25px;
+    $bigFieldHeight: $fieldHeight * 2;
 
     .trade-information {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        height: $fieldHeight * 2;
+        height: $bigFieldHeight + 10px;
         padding: 5px 10px;
         background: #ebeef8;
         margin: 1.5rem;
@@ -81,7 +82,7 @@ export default {
         height: $fieldHeight;
         margin: 0 2em;
         &.big {
-            height: $fieldHeight * 2;
+            height: $bigFieldHeight;
             & > span {
                 display: block;
                 height: $fieldHeight;

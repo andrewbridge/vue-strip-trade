@@ -54,8 +54,12 @@ export default {
 
 <style lang="scss">
     .options-panel {
+        display: flex;
         min-width: 100%;
-        float: left;
+    }
+
+    .labels {
+        width: 160px;
     }
 
     .option {

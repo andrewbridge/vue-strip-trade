@@ -58,7 +58,7 @@ export default {
 
 <style scoped lang="scss">
     .field-container {
-        min-width: 10vw;
+        width: 150px;
         border: 3px solid #0a217f;
 
         & > :nth-child(2n) {

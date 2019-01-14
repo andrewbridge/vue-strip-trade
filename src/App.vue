@@ -27,26 +27,30 @@ export default {
 </script>
 
 <style lang="scss">
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     font-family: sans-serif;
   }
 
   .field {
     & > * {
-      width: calc(50% - 0.25em);
+      width: 50%;
       display: inline-block;
     }
     &.full {
       :first-child {
-        width: calc(100% - 0.25em);
+        width: 100%;
       }
     }
     &.button {
       :first-child {
-        width: calc(75% - 0.25em);
+        width: 75%;
       }
       :last-child {
-        width: calc(25% - 0.25em);
+        width: 25%;
       }
     }
   }
