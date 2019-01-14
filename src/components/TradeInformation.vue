@@ -27,7 +27,7 @@
             <input type="number" id="spot" v-model="spotPrice">
         </div>
         <span class="field">Contains:</span>
-        <span class="field">{{trade.options.length}} option{{ trade.options.length !== 1 ? 's' : ''}}, Total Notional (GBP): Sell 0.6M Buy 0.6M</span>
+        <span class="field">{{trade.options.length}} option{{ trade.options.length !== 1 ? 's' : ''}}</span>
     </div>
 </template>
 
