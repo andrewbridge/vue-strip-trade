@@ -70,18 +70,18 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['updateOption']),
+    ...mapActions(['updateOption', 'toggleOptionValue', 'createStripOption']),
     stripDetails() {
       const { tradeId, optionId } = this;
-      this.$store.dispatch('createStripOption', { tradeId, baseOptionId: optionId });
+      this.createStripOption({ tradeId, baseOptionId: optionId });
     },
     toggleOptionType() {
       const { tradeId, optionId } = this;
-      this.$store.commit('toggleOptionType', { tradeId, optionId });
+      this.toggleOptionValue({ tradeId, optionId, value: 'type' });
     },
     toggleOptionNotionalType() {
       const { tradeId, optionId } = this;
-      this.$store.commit('toggleOptionNotionalType', { tradeId, optionId });
+      this.toggleOptionValue({ tradeId, optionId, value: 'notionalInType' });
     },
   }
 };
