@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { uniqueId } from 'lodash';
+import moment from 'moment';
 
 Vue.use(Vuex);
 
@@ -46,6 +48,29 @@ export default new Vuex.Store({
   },
   actions: {
     // actions for the above mutations?
-
+    createTrade(context) {
+      const id = uniqueId('trade-'); // Dummy only, this is dicey
+      const now = moment();
+      context.commit('addTrade', {
+        id,
+        optionClass: 'vanilla',
+        type: 'buy',
+        strike: 0,
+        beginDate: now.format('YYYY-MM-DD'),
+        endDate: now.add(1, 'month').format('YYYY-MM-DD'),
+        expiries: 0,
+        notionalInAmount: 0,
+        notionalInType: 'sell',
+      });
+      return id;
+    },
+    createStripTrade() {
+      // Create logic to adhere to strip rules (loop)
+      // Add ids between base and strip trades?
+      // Cater for base trades that already have that relationship?
+    },
+    updateTrade() {
+      // Can we update everything in the strip when we update the base?
+    },
   },
 });
