@@ -1,34 +1,40 @@
 <template>
-    <div>
-        <OptionClass v-model="optionClass"></OptionClass>
-        <div>
-            {{trade.fromCurrency}} {{type}}
+    <div class="field-container">
+        <div class="full field">
+            <OptionClass v-model="optionClass"></OptionClass>
+        </div>
+        <div class="button field">
+            <span>{{trade.fromCurrency}} {{type}}</span>
             <button v-on:click="this.toggleOptionType">🔁</button>
         </div>
-        <input type="number" v-model="strike">
+        <div class="full field">
+            <input type="number" v-model="strike">
+        </div>
         <div class="empty"></div>
         <div class="empty"></div>
-        <div>
+        <div class="field">
             <label for="beginDate">Strip begin date</label>
             <input type="date" id="beginDate" v-model="beginDate">
         </div>
-        <div>
+        <div class="field">
             <label for="endDate">Strip end date</label>
             <input type="date" id="endDate" v-model="endDate">
         </div>
-        <div>
+        <div class="field">
             <label for="expiries">Expiries:</label>
             <input type="number" id="expiries" v-model="expiries">
         </div>
         <div class="empty"></div>
-        <button v-on:click="stripDetails">Strip details</button>
+        <div>
+            <button v-on:click="stripDetails">Strip details</button>
+        </div>
         <div>
             <span>Leg total notional:</span>
         </div>
         <div>
-            600,000
+            {{notionalInAmount * expiries}}
         </div>
-        <div>
+        <div class="button field">
             <input type="number" v-model="notionalInAmount">
             <button v-on:click="this.toggleOptionNotionalType">{{notionalInType}} 🔁</button>
         </div>
@@ -47,8 +53,8 @@ const getAndEmit = (fieldName) => {
     set(newValue) {
       const { tradeId, optionId } = this;
       this.updateOption({ tradeId, optionId, changes: { [fieldName]: newValue } });
-    }
-  }
+    },
+  };
 };
 
 export default {
@@ -83,6 +89,20 @@ export default {
       const { tradeId, optionId } = this;
       this.toggleOptionValue({ tradeId, optionId, value: 'notionalInType' });
     },
-  }
+  },
 };
 </script>
+
+<style scoped lang="scss">
+    .field-container {
+        min-width: 10vw;
+        border: 3px solid #aec8ff;
+
+        & > :nth-child(2n) {
+            background: #e1eefc;
+        }
+        & > :nth-child(2n + 1) {
+            background: #cee1f6;
+        }
+    }
+</style>

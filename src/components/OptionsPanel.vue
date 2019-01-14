@@ -1,14 +1,37 @@
 <template>
-    <div class="options-panel">
-        <div class="field-labels">
+    <div>
+        <div class="options-panel">
+            <div class="field-container labels">
+                <span>option class</span>
+                <span>call/put</span>
+                <span>strike</span>
+                <span>trigger 1</span>
+                <span>trigger 2</span>
+                <span>expiry (TK 3:00pm)</span>
+                <span>delivery</span>
+                <span>details</span>
+                <span>volatility</span>
+                <span>fwd points</span>
+                <span>25d RR (%)</span>
+                <span>25d Bfly (%)</span>
+                <span>Notional in</span>
+            </div>
+            <div class="option" v-for="(option, optionIndex) in trade.options">
+                <Option :tradeId="id" :optionId="optionIndex" v-if="option.type !== 'strip'"></Option>
+                <Leg :tradeId="id" :optionId="optionIndex" :legId="legIndex" v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'"></Leg>
+            </div>
+            <div class="option">
+                <button v-on:click="createOption" class="add-prompt">+</button>
+            </div>
+        </div>
+        <div class="options-panel">
+            <div class="final total">
 
-        </div>
-        <div class="option" v-for="(option, optionIndex) in trade.options">
-            <Option :tradeId="id" :optionId="optionIndex" v-if="option.type !== 'strip'"></Option>
-            <Leg :tradeId="id" :optionId="optionIndex" :legId="legIndex" v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'"></Leg>
-        </div>
-        <div class="option">
-            <button v-on:click="createOption">+</button>
+            </div>
+            <div class="total" v-for="(option, optionIndex) in trade.options">
+                <span v-if="option.type !== 'strip'">Option total</span>
+                <span v-for="(leg, legIndex) in option.legs" v-if="option.type === 'strip'">Leg total</span>
+            </div>
         </div>
     </div>
 </template>
@@ -40,8 +63,25 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-    .options-panel {
+<style lang="scss">
+    .options-panel, .option {
         display: flex;
+    }
+
+    .field-container > * {
+        display: block;
+        height: 25px;
+        padding: 0.25em 0.5em;
+    }
+
+    button.add-prompt {
+        font-size: 2em;
+        min-width: 10vw;
+        background: none;
+        border: 3px solid #aec8ff;
+    }
+
+    .total {
+        min-width: 10vw;
     }
 </style>

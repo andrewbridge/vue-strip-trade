@@ -27,5 +27,27 @@ export default {
 </script>
 
 <style lang="scss">
+  body {
+    font-family: sans-serif;
+  }
 
+  .field {
+    & > * {
+      width: calc(50% - 0.25em);
+      display: inline-block;
+    }
+    &.full {
+      :first-child {
+        width: calc(100% - 0.25em);
+      }
+    }
+    &.button {
+      :first-child {
+        width: calc(75% - 0.25em);
+      }
+      :last-child {
+        width: calc(25% - 0.25em);
+      }
+    }
+  }
 </style>

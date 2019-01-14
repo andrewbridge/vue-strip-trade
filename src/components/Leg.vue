@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="field-container">
         <div>
             {{optionClass}}
         </div>
@@ -11,8 +11,12 @@
         </div>
         <div class="empty"></div>
         <div class="empty"></div>
-        {{beginDate}}
-        {{endDate}}
+        <div>
+            {{beginDate}}
+        </div>
+        <div>
+            {{endDate}}
+        </div>
         <div class="empty"></div>
         <div class="empty"></div>
         <div class="empty"></div>
@@ -51,3 +55,17 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+    .field-container {
+        min-width: 10vw;
+        border: 3px solid #0a217f;
+
+        & > :nth-child(2n) {
+            background: #cce4ff;
+        }
+        & > :nth-child(2n + 1) {
+            background: #b0d6ff;
+        }
+    }
+</style>

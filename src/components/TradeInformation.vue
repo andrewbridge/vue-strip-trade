@@ -15,13 +15,11 @@
             </select>
         </div>
         <div class="field">
-            <label for="currency-pair">Currency pair</label>
-            <select id="currency-pair" v-model="fromCurrency">
-                <option>GBP</option>
-            </select>
-            <select id="currency-pair" v-model="toCurrency">
-                <option>USD</option>
-            </select>
+            <span>Currency pair</span>
+            <span class="inline-dropdown">
+                <Currency v-model="fromCurrency"></Currency>
+                <Currency v-model="toCurrency"></Currency>
+            </span>
         </div>
         <div class="big field">
             <span>Portfolio:</span>
@@ -29,12 +27,13 @@
             <input type="number" id="spot" v-model="spotPrice">
         </div>
         <span>Contains:</span>
-        <span>12 Options, Total Notional (GBP): Sell 0.6M Buy 0.6M</span>
+        <span>{{trade.options.length}} option{{ trade.options.length !== 1 ? 's' : ''}}, Total Notional (GBP): Sell 0.6M Buy 0.6M</span>
     </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
+import Currency from './Currency.vue';
 
 const getAndEmit = (fieldName) => {
   return {
@@ -49,11 +48,13 @@ const getAndEmit = (fieldName) => {
 
 export default {
   name: 'TradeInformation',
+  components: { Currency },
   props: {
     id: String,
   },
   computed: {
     ...['tradeDate', 'spotDate', 'dataSnap', 'fromCurrency', 'toCurrency', 'spotPrice'].reduce((funcs, prop) => Object.assign(funcs, { [prop]: getAndEmit(prop) }), {}),
+    ...mapState(['currencies']),
     trade() {
       return this.$store.getters.getTrade(this.id);
     },
@@ -63,5 +64,34 @@ export default {
 </script>
 
 <style scoped lang="scss">
+    $fieldHeight: 25px;
 
+    .trade-information {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: $fieldHeight * 2;
+        padding: 5px 10px;
+        background: #ebeef8;
+        margin: 1.5rem;
+        border-radius: 0.5em;
+    }
+
+    .field {
+        height: $fieldHeight;
+        margin: 0 2em;
+        &.big {
+            height: $fieldHeight * 2;
+            span {
+                display: block;
+            }
+        }
+    }
+
+    .inline-dropdown {
+        & > * {
+            width: calc(50% - 0.25em);
+            display: inline-block;
+        }
+    }
 </style>

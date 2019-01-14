@@ -45,6 +45,11 @@ export default new Vuex.Store({
       'Binaries',
       'Accumulator template',
     ],
+    currencies: [
+      'GBP',
+      'USD',
+      'EUR',
+    ],
   },
   getters: {
     getTrade: getTradeObject,
